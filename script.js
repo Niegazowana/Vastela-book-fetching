@@ -66,7 +66,7 @@ async function fetchInfoFromGoogleBooks(isbnNumber, apiKey) {
         // Display the extracted information in an alert or update the HTML
         // alert(`Title: ${title}\nAuthors: ${authors}\nPublisher: ${publisher}\nDescription: ${description}\nPage Count: ${pageCount}\nRating: ${averageRating}\nPreview Link: ${previewLink}`);
         
-        return new Book(title, authors, thumbnail); // Return the title
+        return new Book(title, authors, description, thumbnail); // Return the title
     } catch (error) {
         // Handle any errors that occurred during the fetch operation
         console.error('There was a problem with the fetch operation:', error);
@@ -77,13 +77,14 @@ async function fetchInfoFromGoogleBooks(isbnNumber, apiKey) {
 function createExcelFile(books) {
     // Create a simple data structure for the Excel file
     const data = [
-        ['Title', 'Author', 'thumbnail']
+        ['Title', 'Author', 'Description', 'thumbnail']
     ];
 
     for (const book of books) {
         const bookData = []
         bookData.push(book.title)
         bookData.push(book.author)
+        bookData.push(book.description)
         bookData.push(book.thumbnail)
 
         data.push(bookData)
@@ -140,10 +141,11 @@ hideProgress()
 
 class Book {
     // Constructor to initialize properties
-    constructor(title, author, thumbnail) {
+    constructor(title, author, description, thumbnail) {
         this.title = title;
         this.author = author;
         this.thumbnail = thumbnail;
+        this.description = description;
     }
 
     // Method to display book information
@@ -151,5 +153,6 @@ class Book {
         console.log(`Title: ${this.title}`);
         console.log(`Author: ${this.author}`);
         console.log(`Thumbnail URL: ${this.thumbnail}`);
+        console.log(`description: ${this.description}`);
     }
 }
