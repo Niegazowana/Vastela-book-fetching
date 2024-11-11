@@ -16,7 +16,9 @@ async function handleButtonClick() {
     const number = isbnNumbers[i];
     updateProgress(i, isbnNumbers.length)
     const bookTitle = await fetchInfoFromGoogleBooks(number, apiKey);
-    books.push(bookTitle)
+    if (bookTitle != null) {
+        books.push(bookTitle)
+    }
    }
 
    lastBooks = books
@@ -50,6 +52,9 @@ async function fetchInfoFromGoogleBooks(isbnNumber, apiKey) {
         // Await the JSON data from the response
         const data = await response.json();
         
+        if (data.items == null || data.items.length == 0) {
+            return null
+        }
         // Parsing the JSON data
         const book = data.items[0]; // Get the first book in the response
 
