@@ -65,13 +65,18 @@ async function fetchInfoFromGoogleBooks(isbnNumber, apiKey) {
         const description = book.volumeInfo.description;
         const pageCount = book.volumeInfo.pageCount;
         const averageRating = book.volumeInfo.averageRating;
-        const thumbnail = book.volumeInfo.imageLinks.thumbnail;
+        imageLink = book.volumeInfo.imageLinks.thumbnail;
+        if(book.volumeInfo.imageLinks.medium != null) {
+            imageLink = book.volumeInfo.imageLinks.medium
+        } else if(book.volumeInfo.imageLinks.small != null) {
+            imageLink = book.volumeInfo.imageLinks.small
+        }
         const previewLink = book.volumeInfo.previewLink;
 
         // Display the extracted information in an alert or update the HTML
         // alert(`Title: ${title}\nAuthors: ${authors}\nPublisher: ${publisher}\nDescription: ${description}\nPage Count: ${pageCount}\nRating: ${averageRating}\nPreview Link: ${previewLink}`);
         
-        return new Book(title, authors, description, thumbnail); // Return the title
+        return new Book(title, authors, description, imageLink); // Return the title
     } catch (error) {
         // Handle any errors that occurred during the fetch operation
         console.error('There was a problem with the fetch operation:', error);
@@ -90,7 +95,7 @@ function createExcelFile(books) {
         bookData.push(book.title)
         bookData.push(book.author)
         bookData.push(book.description)
-        bookData.push(book.thumbnail)
+        bookData.push(book.imageLink)
 
         data.push(bookData)
     }
@@ -127,7 +132,7 @@ function showProgress() {
 function showThumbnails() {
     for (const book of lastBooks) {
         const imgElement = document.createElement('img');
-        imgElement.src = book.thumbnail;
+        imgElement.src = book.imageLink;
         imgElement.alt = book.title;
         imgElement.style.maxWidth = '200px'; // Set image size
         document.body.appendChild(imgElement);
@@ -146,10 +151,10 @@ hideProgress()
 
 class Book {
     // Constructor to initialize properties
-    constructor(title, author, description, thumbnail) {
+    constructor(title, author, description, imageLink) {
         this.title = title;
         this.author = author;
-        this.thumbnail = thumbnail;
+        this.imageLink = imageLink;
         this.description = description;
     }
 
@@ -157,7 +162,7 @@ class Book {
     displayInfo() {
         console.log(`Title: ${this.title}`);
         console.log(`Author: ${this.author}`);
-        console.log(`Thumbnail URL: ${this.thumbnail}`);
+        console.log(`imageLink URL: ${this.imageLink}`);
         console.log(`description: ${this.description}`);
     }
 }
