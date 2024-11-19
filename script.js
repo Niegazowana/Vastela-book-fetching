@@ -73,10 +73,12 @@ async function fetchInfoFromGoogleBooks(isbnNumber, apiKey) {
         }
         const previewLink = book.volumeInfo.previewLink;
 
+        const alternativeImg = `https://covers.openlibrary.org/b/isbn/${isbnNumber}-L.jpg`
+
         // Display the extracted information in an alert or update the HTML
         // alert(`Title: ${title}\nAuthors: ${authors}\nPublisher: ${publisher}\nDescription: ${description}\nPage Count: ${pageCount}\nRating: ${averageRating}\nPreview Link: ${previewLink}`);
         
-        return new Book(title, authors, description, imageLink); // Return the title
+        return new Book(title, authors, description, imageLink, alternativeImg); // Return the title
     } catch (error) {
         // Handle any errors that occurred during the fetch operation
         console.error('There was a problem with the fetch operation:', error);
@@ -87,7 +89,7 @@ async function fetchInfoFromGoogleBooks(isbnNumber, apiKey) {
 function createExcelFile(books) {
     // Create a simple data structure for the Excel file
     const data = [
-        ['Title', 'Author', 'Description', 'thumbnail']
+        ['Title', 'Author', 'Description', 'Google image', 'open library image']
     ];
 
     for (const book of books) {
@@ -96,6 +98,7 @@ function createExcelFile(books) {
         bookData.push(book.author)
         bookData.push(book.description)
         bookData.push(book.imageLink)
+        bookData.push(book.alternativeImg)
 
         data.push(bookData)
     }
@@ -151,10 +154,11 @@ hideProgress()
 
 class Book {
     // Constructor to initialize properties
-    constructor(title, author, description, imageLink) {
+    constructor(title, author, description, imageLink, alternativeImg) {
         this.title = title;
         this.author = author;
         this.imageLink = imageLink;
+        this.alternativeImg = alternativeImg;
         this.description = description;
     }
 
